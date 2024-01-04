@@ -59,7 +59,7 @@ void darj() {
     for (int i = 0; i < 1; i++) {
         cout << "enter sending month:" << endl;
         cin >> d.smonth;
-        if (d.smonth > 12 || d.smonth < 0) { i--; cout << "Please enter the date correctly\n"; };
+        if (d.smonth > 12 || d.smonth < 0) { i--; cout << "Please enter the date correctly\n"; }
     }
   /*  for (int i = 0; i < 1; i++) {
         cout << "enter reciving day:" << endl;
@@ -224,8 +224,10 @@ void rate() {
 
 
 void info() {
-    string code;
-    string line;
+    marsole m;
+    date d;
+    int code;
+    string line, time;
     cout << "enter your post code:";
     cin >> code;
     fstream data("file.txt", ios::in);
@@ -235,30 +237,28 @@ void info() {
         exit(1);
     }
 
-    while (!data.eof()) { //read a line
+    while (!data.eof())
+    {
+        data >> m.postcode >> m.sendername >>m.sendercity >>time >> m.recivername >> m.recivercity >> m.postpaid;
+        if (m.postcode == code) {
+            cout <<"post code:" <<m.postcode<<endl<<"Sender Name:"<< m.sendername<<endl<<"Sender City"<<m.sendercity<<endl<<"Send Time: "<<time<<endl<<"Reciver Name: "<< m.recivername<<endl<<"Reciver City: "<< m.recivercity <<endl<<"Postal Fare"<< m.postpaid;
+            while(!DataDate.eof())    {//check date reacive
+                marsole m2;
 
-        getline(data, line);
-        while (1) {
-            size_t test = (line.find(code));
-
-            if (test < sizeof(line)) {				// find word
-                cout << line << endl;//outing without date receive
-
-                while (!DataDate.eof()) {    //read date receive
-
-                    string Line;
-                    getline(DataDate, Line);
-
-
-                    size_t test = Line.find(code, 0);
-                    if (test < sizeof(line)) {
-
-                        cout << Line << endl;
-                    }
-
-
+                DataDate>>m2.postcode>>d.FullDate;
+                if(m2.postcode==m.postcode){
+                    cout<<endl<<"Date Recive: "<<d.FullDate<<endl;
+                    break;
                 }
+                else{
+                    cout<<endl<<"Received date not found.";
+                }
+
             }
+        }
+        else{
+            cout<<"PostCode is NOT FOUND!";
+            break;
         }
     }
 
@@ -350,6 +350,3 @@ int main() {
     }
 
 }
-
-
-
