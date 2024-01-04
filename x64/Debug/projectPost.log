@@ -1,0 +1,2 @@
+﻿  project.cpp
+LINK : fatal error LNK1168: cannot open E:\source\projectPost\x64\Debug\projectPost.exe for writing
