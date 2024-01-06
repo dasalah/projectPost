@@ -70,6 +70,8 @@ void darj() {
 
 void tahvil() { //function 2  OK
     fstream get("get.txt", ios::app); //create file 2 ok
+    fstream file("file.txt",ios::in);
+    marsole m;
     if (!get) {
         cerr << "somrthing went wrong during opening the file please make sure that the file that you chose exists!" << endl;
         exit(1);
@@ -77,10 +79,21 @@ void tahvil() { //function 2  OK
     marsole reacive;
     date Reacive;
     int i;
+    bool check=0;
+
     cout << "enter your postcode:" << endl;
     cin >> reacive.postcode;
+    if(isdigit(reacive.postcode))
 
+    while(!file.eof()){
+        file >> m.postcode >> m.sendername >> m.sendercity >> Reacive.FullDate >> m.recivername >> m.recivercity >> m.postpaid;if(m.postcode==reacive.postcode){
+            if (m.postcode==reacive.postcode){
+                check=1;
+            }
+                                                                                                                                                                              }
+                      }
 
+if(check){
     for (i = 0; i < 1; i++) {
         cout << "enter reciving day:" << endl;
         cin >> Reacive.rday;
@@ -93,6 +106,13 @@ void tahvil() { //function 2  OK
     }
     get << reacive.postcode << setw(10) << Reacive.rmonth << '/' << Reacive.rday << endl;
     cout << "Data successfully recorded." << endl;
+        } //end if(check)
+
+    else{
+        system("color c");
+        cout<<"Your shipping code was not found in the postal system database.\n";
+        exit(0);
+    }
     get.close();
 }
 
@@ -108,7 +128,7 @@ void DayInfo() {
         cerr << "somrthing went wrong during opening the file please make sure that the file that you chose exists!" << endl;
         exit(1);
     }
-    cout << "enter your date  (MM/DD)" << endl;; //get data
+    cout << "enter your date  (MM/DD)" << endl; //get data
     cin >> TimeCheck;
 
     while (!file.eof())
@@ -239,14 +259,15 @@ void info() {
                     break;
                 }
                 else {
-                    cout << endl << "Received date not found.";
+                    cout << endl << "ERROR 0, Received date not found.";
                 }
 
             }
         }
         else {
-            cout << "PostCode is NOT FOUND!";
+            cerr << "ERROR 0, PostCode is NOT FOUND!";
             break;
+
         }
     }
 
@@ -262,7 +283,7 @@ void maxsend() {
     fstream readfile("file.txt", ios::in);
     if (!readfile) {
         cerr << "somthing went wrong during opening thr file please make sure the file the you chose exists!" << endl;
-        exit(07);
+        exit(1);
     }
     while (!readfile.eof()) {
         readfile >> m.postcode >> m.sendername >> m.sendercity >> date >> m.recivername >> m.recivercity >> ma.postpaid;
@@ -293,7 +314,7 @@ void maxreceive() {
     fstream readfile("file.txt", ios::in);
     if (!readfile) {
         cerr << "somthing went wrong during opening thr file please make sure the file the you chose exists!" << endl;
-        exit(07);
+        exit(1);
     }
     while (!readfile.eof()) {
         readfile >> m.postcode >> m.sendername >> m.sendercity >> date >> m.recivername >> m.recivercity >> ma.postpaid;
@@ -371,6 +392,16 @@ void city() {
 
     }
 }
+
+void exit(){
+    system("cls");
+    system("title exit code.");
+    cout<<"   Sign-out codes   \n"<<"code 0 = Not Found\n"<<"code 1 = Unsuccessful file opening\n";
+
+
+}
+
+
 int main() {
 
     while (1) {
@@ -385,7 +416,8 @@ int main() {
                 << "5- max sender                 \n"
                 << "6-                   \n"
                 << "7-Monthly income           \n"
-                << "8-Number of intercity shipments  \n\n"
+                << "8-Number of intercity shipments  \n"
+                << "0-exit code \n\n"
                 << "Please enter your request number:\n";
 
         cin >> n;
@@ -414,15 +446,20 @@ int main() {
                     rate();
                     break;
                 case 8:
+                    city();
+                    break;
+                case 9:
+                    exit();
                     break;
                 case 0:
                     continue;
-                default: cout << "wrong number";
+                default: cout << "wrong number\n";
             }
             cout << "do you want to continue?(y/n)\n";
             char ch;
             cin >> ch;
-            if (ch == 'n' || ch == 'N') break;
+            if (ch == 'n' || ch == 'N') return 9;
+
             else {
                 break;
             }
