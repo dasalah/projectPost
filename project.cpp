@@ -266,7 +266,7 @@ void info() {
     DataDate.close();
 }
 
-/*
+
 void maxsend(){
     marsole m,ma;
     string date,date2, maxsender;
@@ -277,12 +277,12 @@ void maxsend(){
         exit(07);
     }
     while(!readfile.eof()){
-        readfile>>m.postcode>>m.sendername>>m.sendercity>>date>>m.recivername>>m.recivercity;
+        readfile>>m.postcode>>m.sendername>>m.sendercity>>date>>m.recivername>>m.recivercity>>ma.postpaid;
         int sendcount=1;
        readfile.seekg(0,ios::beg);
         while(!readfile.eof()){
 
-            readfile>>ma.postcode>>ma.sendername>>m.sendercity>>date2>>ma.recivername>>ma.recivercity;
+            readfile>>ma.postcode>>ma.sendername>>m.sendercity>>date2>>ma.recivername>>ma.recivercity>>ma.postpaid;
             if(ma.sendername==m.sendername){
                 sendcount++;
             }
@@ -290,12 +290,74 @@ void maxsend(){
         }
         if(sendcount>maxcount){
             maxcount=sendcount;
-            maxsender+ma.sendername;
+            maxsender=ma.sendername;
         }
     }
-    cout<<maxsender<<" sent the most post with"<<maxcount<<"sending";
+    cout<<maxsender<<" sent the most post with"<<maxcount<<"sending"<<endl;
 }
-*/
+
+
+
+void maxreceive(){
+    marsole m,ma;
+    string date,date2, maxreceiver;
+    int maxcount=1;
+    fstream readfile("file.txt",ios::in);
+    if(!readfile){
+        cerr<<"somthing went wrong during opening thr file please make sure the file the you chose exists!"<<endl;
+        exit(07);
+    }
+    while(!readfile.eof()){
+        readfile>>m.postcode>>m.sendername>>m.sendercity>>date>>m.recivername>>m.recivercity>>ma.postpaid;
+        int receivecount=1;
+        readfile.seekg(0,ios::beg);
+        while(!readfile.eof()){
+
+            readfile>>ma.postcode>>ma.sendername>>m.sendercity>>date2>>ma.recivername>>ma.recivercity>>ma.postpaid;
+            if(ma.recivername==m.recivername){
+                receivecount++;
+            }
+
+        }
+        if(receivecount>maxcount){
+            maxcount=receivecount;
+            maxreceiver=ma.recivername;
+        }
+    }
+    cout<<maxreceiver<<" sent the most post with "<<maxcount<<" receiving"<<endl;
+}
+
+void seecity(){
+
+    marsole m,ma;
+    date date;
+
+    fstream file("file.txt",ios ::in);
+
+
+
+    while(!file.eof()){
+
+        file>>m.postcode>>m.sendername>>m.sendercity>>date.FullDate>>m.recivername>>m.recivercity>>m.postpaid;
+        while(!file.eof()){
+            file>>ma.postcode>>ma.sendername>>ma.sendercity>>date.FullDate>>ma.recivername>>ma.recivercity>>ma.postpaid;
+            if ( m.recivercity ==ma.sendercity && m.sendercity==ma.sendercity)
+
+        }
+
+
+
+
+
+    }
+
+
+
+
+
+}
+
+
 int main() {
 
     while (1) {
@@ -330,8 +392,11 @@ int main() {
                 info();
                 break;
             case 5:
-         //       maxsend();
+             maxsend();
                 break;
+             case 6:
+                 maxreceive();
+                 break;
             case 7:
                 rate();
                 break;
