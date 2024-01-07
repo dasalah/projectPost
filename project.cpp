@@ -19,54 +19,54 @@ typedef struct {
 } marsole;
 
 class Date{
-	private:
-		int day;
-		int month;
-		char FullDate[6];
-	public:
-		Date(){
-			day=1;
-			month=1;
-		}
-		void setmonth(int m){
-			while (m<1||m>12){
-				cout<<"Invald month. Please enter a number betwen 1 and 12:"<<endl;
-				cin>>m;
-			}
-			month=m;
-		}
-		void setday(int d){
-			while (d<1||d>31){
-				cout<<"Invald day. Please enter a number betwen 1 and 31:"<<endl;
-				cin>>d;
-			}
-			day=d;
-		}
-		string printdate(){
-			ostringstream date;
-			date<<setfill('0')<<setw(2)<<month<<"/"<<setw(2)<<day;
-			return date.str();
-			
-		}
+private:
+    int day;
+    int month;
+    char FullDate[6];
+public:
+    Date(){
+        day=1;
+        month=1;
+    }
+    void setmonth(int m){
+        while (m<1||m>12){
+            cout<<"Invald month. Please enter a number betwen 1 and 12:"<<endl;
+            cin>>m;
+        }
+        month=m;
+    }
+    void setday(int d){
+        while (d<1||d>31){
+            cout<<"Invald day. Please enter a number betwen 1 and 31:"<<endl;
+            cin>>d;
+        }
+        day=d;
+    }
+    string printdate(){
+        ostringstream date;
+        date<<setfill('0')<<setw(2)<<month<<"/"<<setw(2)<<day;
+        return date.str();
+
+    }
 };
 
 //for function number 1 and 2
 bool checkpostcode(int postcode){
-	ifstream file1("file1.txt");
-	if(!file1){
-		cerr<<"Erorr"<<endl;
-		exit(1);
-	}
-	marsole m;
-	string date;
-	while (file1>>m.postcode>>m.sendername>>m.sendercity>>date>>m.recivername>>m.recivercity>>m.postpaid){
-		if(m.postcode==postcode){
-			file1.close();
-			return true;
-		}
-	}
-	file1.close();
-	return false;
+    ifstream file1("file1.txt");
+    if(!file1){
+        cerr<<"Erorr"<<endl;
+        exit(1);
+    }
+    marsole m;
+    string date;
+    while (file1>>m.postcode>>m.sendername>>m.sendercity>>date>>m.recivername>>m.recivercity>>m.postpaid){
+        if(m.postcode==postcode){
+            file1.close();
+            return true;
+        }
+    }
+    file1.close();
+    return false;
 }
 
 //entering a new parcel
@@ -80,10 +80,10 @@ void darj() {
     }
     cout << "enter your postcode:" << endl;
     cin>>m.postcode;
-     while(checkpostcode(m.postcode)){
-    	cout<<"Invalid postcode. Please enter a valid postcode:"<<endl;
-    	cin>>m.postcode;
-	}
+    while(checkpostcode(m.postcode)){
+        cout<<"Invalid postcode. Please enter a valid postcode:"<<endl;
+        cin>>m.postcode;
+    }
     cout << "enter the price of your parcel:" << endl;
     cin >> m.postpaid;
     cout << "enter sender's name:" << endl;
@@ -95,7 +95,7 @@ void darj() {
     cout << "enter reciver's city:" << endl;
     cin >> m.recivercity;
     int ds, ms;
-	Date s;
+    Date s;
     cout << "enter sending day:" << endl;
     cin >> ds;
     s.setday(ds);
@@ -109,7 +109,7 @@ void darj() {
 }
 
 //entering delivery of a parcel
-void tahvil() { 
+void tahvil() {
     fstream file2("get.txt", ios::app);
     if (!file2) {
         cerr << "somrthing went wrong during opening the file. please make sure that the file that you chose exists!" << endl;
@@ -121,9 +121,9 @@ void tahvil() {
     cout <<"enter your postcode:"<< endl;
     cin >> recive.postcode;
     while(!checkpostcode(recive.postcode)){
-    	cout<<"Invalid postcode. Please enter a valid postcode:"<<endl;
-    	cin>>recive.postcode;
-	}
+        cout<<"Invalid postcode. Please enter a valid postcode:"<<endl;
+        cin>>recive.postcode;
+    }
     cout<<"enter reciving day:"<<endl;
     cin>>dr;
     Recive.setday(dr);
@@ -137,15 +137,15 @@ void tahvil() {
 
 //info of certain date
 void DayInfo() {
-    marsole m;							
+    marsole m;
     Date d;
     int day, month;
-    bool check=0;
+    bool CheckReceive=0,CheckTime=0;
     string line, lineCheck;
     string time, TimeCheck;
-    fstream file("file.txt", ios::in); 
+    fstream file("file.txt", ios::in);
     fstream date("get.txt", ios::in);
-    if (!file && date) {
+    if (!(file.is_open() && date.is_open())) {
         cerr << "somrthing went wrong during opening the file. please make sure that the file that you chose exists!" << endl;
         exit(1);
     }
@@ -161,23 +161,33 @@ void DayInfo() {
     {
         file >> m.postcode >> m.sendername >> m.sendercity >> time >> m.recivername >> m.recivercity >> m.postpaid;
         if (TimeCheck == time) {
+            CheckTime=1;
             cout << m.postcode << " " << m.sendername << " " << m.sendercity << " " << time << " " << m.recivername << " " << m.recivercity << " " << m.postpaid << " ";
             while (!date.eof()) {
                 marsole m2;
                 string FullDate;
 
                 date >> m2.postcode >> FullDate;
-                if (m2.postcode == m.postcode) {
+                if (m2.postcode == m.postcode)  {
                     cout << FullDate << endl;
-                    check=1;
+                    CheckReceive=1;
 
                                                 }
-                if(!check){
-                    cout<<endl;
-                }
+
             }
+            if(!CheckReceive){
+                cout<<endl;
+                             }
+
         }
+
+
     }
+    if(!CheckTime){
+        system("color c");
+        cout<<"No shipments have been sent on your intended date\n";
+
+                  }
 
     file.close();
     date.close();
@@ -186,25 +196,28 @@ void DayInfo() {
 
 //monthly income
 void PrintMonthlyIncome(){
-	ifstream file1("file.txt");
-	if(!file1){
-	cerr<<"Error";
-	exit(1);	
-	}
-	marsole m;
-	string date;
-	
-	int monthlyincome[13]={0};
-	while(file1>>m.postcode>>m.sendername>>m.sendercity>>date>>m.recivername>>m.recivercity>>m.postpaid){
-		int month = stoi(date.substr(0, 2));
-		monthlyincome[month]+=m.postpaid;
-	}
-	file1.close();
-	
-	cout<<"monthly income:"<<endl;
-	for(int i=1;i<13;i++){
-		cout<<"month "<<i<<":"<<monthlyincome[i]<<endl;
-	}	
+    string month[13]{
+        " ","farvardin: ","ordibehesht: ","khordad: ","tir: ", "mordad: ","shahrivar: ","mehr: ","aban: ","azar: ","dey: ","bahman: ","esfand: "
+    };
+    ifstream file1("file.txt");
+    if(!file1){
+        cerr<<"somrthing went wrong during opening the file. please make sure that the file that you chose exists!";
+        exit(1);
+    }
+    marsole m;
+    string date;
+
+    int monthlyincome[13]={0};
+    while(file1>>m.postcode>>m.sendername>>m.sendercity>>date>>m.recivername>>m.recivercity>>m.postpaid){
+        int month = stoi(date.substr(0, 2));
+        monthlyincome[month]+=m.postpaid;
+    }
+    file1.close();
+
+    cout<<"monthly income: "<<endl;
+    for(int i=1;i<13;i++){
+        cout<<month[i]<<monthlyincome[i]<<endl;
+    }
 }
 
 
@@ -216,8 +229,8 @@ void info() {
     string line, time, FullDate;
     cout << "enter your post code:";
     cin >> code;
-    fstream file1("file1.txt", ios::in);
-    fstream file2("file2.txt", ios::in);
+    fstream file1("file.txt", ios::in);
+    fstream file2("get.txt", ios::in);
     if (!file1.is_open()) {
         cerr << "somrthing went wrong during opening the file. please make sure that the file that you chose exists!" << endl;
         exit(1);
@@ -257,7 +270,7 @@ void maxsend() {
     marsole m, ma;
     string date, date2, maxsender;
     int maxcount = 1;
-    fstream file1("file1.txt", ios::in);
+    fstream file1("file.txt", ios::in);
     if (!file1) {
         cerr << "somthing went wrong during opening thr file please make sure the file the you chose exists!" << endl;
         exit(07);
@@ -411,7 +424,7 @@ int main() {
                     PrintMonthlyIncome();
                     break;
                 case 8:
-                	city();
+                    city();
                     break;
                 case 0:
                     continue;
