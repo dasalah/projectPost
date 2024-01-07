@@ -4,9 +4,18 @@
 #include<string>
 
 using namespace std;
+bool checkpostcode(int postcode); //functions sign
+void darj();
+void tahvil();
+void DayInfo();
+void PrintMonthlyIncome();
+void info();
+void maxsend();
+void maxreceive();
+void city();
+int CheckInt(string line,string Voidname);
 
-
-typedef struct {
+typedef struct { // made struct
     int postcode;
     int postpaid;
     string sendername;
@@ -18,31 +27,31 @@ typedef struct {
 
 } marsole;
 
-class Date{
+class Date{ // class dor date
 private:
     int day;
     int month;
-    char FullDate[6];
+   // char FullDate[6];
 public:
-    Date(){
+    Date(){     // Constructor function
         day=1;
         month=1;
     }
-    void setmonth(int m){
+    void setmonth(int m){ //function for set month
         while (m<1||m>12){
             cout<<"Invald month. Please enter a number betwen 1 and 12:"<<endl;
             cin>>m;
         }
         month=m;
     }
-    void setday(int d){
+    void setday(int d){ //function for set day
         while (d<1||d>31){
             cout<<"Invald day. Please enter a number betwen 1 and 31:"<<endl;
             cin>>d;
         }
         day=d;
     }
-    string printdate(){
+    string printdate(){ //function for return FullDate(MM/DD)
         ostringstream date;
         date<<setfill('0')<<setw(2)<<month<<"/"<<setw(2)<<day;
         return date.str();
@@ -50,11 +59,11 @@ public:
     }
 };
 
-//for function number 1 and 2
-bool checkpostcode(int postcode){
-    ifstream file1("file1.txt");
+
+bool checkpostcode(int postcode){ //function for exist post code
+    ifstream file1("file.txt");
     if(!file1){
-        cerr<<"Erorr"<<endl;
+        cerr<<"somrthing went wrong during opening the file please make sure that the file that you chose exists!"<<endl;
         exit(1);
     }
     marsole m;
@@ -69,9 +78,8 @@ bool checkpostcode(int postcode){
     return false;
 }
 
-//entering a new parcel
-void darj() {
-
+void darj() {  //entering a new shipment info
+    string code;
     marsole m;
     fstream file1("file.txt", ios::app);
     if (!file1) {
@@ -79,10 +87,12 @@ void darj() {
         exit(1);
     }
     cout << "enter your postcode:" << endl;
-    cin>>m.postcode;
-    while(checkpostcode(m.postcode)){
-        cout<<"Invalid postcode. Please enter a valid postcode:"<<endl;
-        cin>>m.postcode;
+    cin>>code;
+    m.postcode=CheckInt(code,"PostCode");
+
+    if(checkpostcode(m.postcode)){
+        cout<<"This code is already registered in the database."<<endl;
+        return;
     }
     cout << "enter the price of your parcel:" << endl;
     cin >> m.postpaid;
@@ -224,7 +234,7 @@ void PrintMonthlyIncome(){
 //complite info with postcode
 void info() {
     marsole m;
-    Date d;
+    //Date d;
     int code;
     string line, time, FullDate;
     cout << "enter your post code:";
@@ -336,31 +346,39 @@ void city() {
 
     int counter;
 
-    ifstream file1("file1.txt");
+    ifstream readfile("file.txt");
 
-    if (!file1) {
+    if (!readfile) {
 
         cerr << "somthing went wrong during opening thr file please make sure the file the you chose exists!" << endl;
 
         exit(1);
 
     }
-    while (!file1.eof()) {
+    while (!readfile.eof()) {
 
         int count=0;
 
         bool citypair = false;
 
-        file1 >> m.postcode >> m.sendername >> m.sendercity >> date >> m.recivername >> m.recivercity >> m.postpaid;
+        readfile >> m.postcode >> m.sendername >> m.sendercity >> date >> m.recivername >> m.recivercity >> m.postpaid;
 
-        ifstream file1_2("file.txt");
+        ifstream readfile2("file.txt");
 
-        while (!file1_2.eof()) {
+        while (!readfile2.eof()) {
 
-            file1_2 >> t.postcode >> t.sendername >> t.sendercity >> date2 >> t.recivername >> t.recivercity>> t.postpaid;
+            readfile2 >> t.postcode >> t.sendername >> t.sendercity >> date2 >> t.recivername >> t.recivercity
+                      >> t.postpaid;
+            /* char recivercity1[size(m.recivercity)+1];
+             char recivercity2[size(t.recivercity)+1];
+             char sendercity1[size(m.sendercity)+1];
+             char sendercity2[size(t.sendercity)+1];
 
-            if ((m.recivercity == t.recivercity) && (m.sendercity == t.sendercity) && (m.recivercity != m.sendercity)) {
+ */
 
+
+            if ( (m.recivercity == t.recivercity) && (m.sendercity == t.sendercity) && (m.recivercity != m.sendercity)) {
+                if(!readfile2.eof());
                 count++;
 
                 citypair = true;
@@ -369,25 +387,49 @@ void city() {
 
         }
 
-        file1_2.close();
-
+        readfile2.close();
+        if(!readfile.eof());
         if (citypair) {
 
-            cout << m.sendercity << setw(6) << m.recivercity << setw(6) << count << setw(4) << endl;
+            cout << m.sendercity << setw(10) << m.recivercity << setw(10) << count << setw(10) << endl;
 
         }
 
-        file1.close();
 
     }
-}
-int main() {
+    readfile.close();
 
-    while (1) {
-        int n;
+}
+
+
+int CheckInt(string line,string Voidname) {
+
+    int number;
+    bool check = 1;
+    while (check) {
+        istringstream iss(line);
+        if (iss >> number) {
+            check = 0;
+            return number;
+
+        } else {
+            cout << Voidname << " is invalid, Enter Again:\n";
+            cin >> line;
+            if (iss >> number) {
+                check = 0;
+                return number;
+            }
+        }
+
+    }
+
+
+}
+
+    void menu(){
         system("color f");
         system("cls");
-        cout
+            cout
                 << "1-register a new shipment       \n"
                 << "2-indert receipt time         \n"
                 << "3-View Daily Posts         \n"
@@ -397,10 +439,16 @@ int main() {
                 << "7-Monthly income           \n"
                 << "8-Number of intercity shipments  \n\n"
                 << "Please enter your request number:\n";
+    }
 
-        cin >> n;
-
-        while (1) {
+int main() {
+    bool run =1;
+    string number;
+    int n;
+    while (run) {
+                menu();
+                cin>>number;
+               n = CheckInt(number,"number");
             switch (n) {
                 case 1:
                     darj();
@@ -426,18 +474,16 @@ int main() {
                 case 8:
                     city();
                     break;
-                case 0:
-                    continue;
-                default: cout << "wrong number";
+                default:
+                    cout << "wrong number";
             }
             cout << "do you want to continue?(y/n)\n";
             char ch;
             cin >> ch;
-            if (ch == 'n' || ch == 'N') break;
-            else {
-                break;
-            }
+        if(ch =='y' || ch == 'Y')run=1;
+
+        else{
+            exit(9);
         }
     }
-
 }
