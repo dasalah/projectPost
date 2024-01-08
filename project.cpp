@@ -55,9 +55,12 @@ int main() {   //main
                 city();
                 break;
             case 9:
+                cityOld();
+                    break;
+            case 10:
                 admin();
                 break;
-            case 10:
+            case 11:
                 InfoPath();
                 break;
             default:
@@ -592,8 +595,9 @@ void menu(){
             << "6-max reciver                  \n"
             << "7-Monthly income           \n"
             << "8-Number of intercity shipments  \n"
-            << "9-adminstrator\n"
-            << "10-Info \n\n"
+            << "9-Number of intercity shipments(BadWork)\N"
+            << "10-adminstrator\n"
+            << "11-Info \n\n"
             <<"Please enter your request number:\n";
 
 
