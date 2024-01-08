@@ -18,6 +18,7 @@ int CheckInt(string line,string Voidname);
 void menu();
 void InfoPath();
 void admin();
+void cityOld();
 int main() {   //main
 
     bool run =1;
@@ -443,6 +444,70 @@ void city() {
         cout<<orgin<<" "<<destenation<<" "<<count<<endl;
     }
 }
+
+void cityOld() {
+
+    marsole m, t;
+
+    string date, date2, f1, f2;
+
+    int counter;
+
+    ifstream readfile("file.txt");
+
+    if (!readfile) {
+
+        cerr << "somthing went wrong during opening thr file please make sure the file the you chose exists!" << endl;
+
+        exit(1);
+
+    }
+    while (!readfile.eof()) {
+
+        int count=0;
+
+        bool citypair = false;
+
+        readfile >> m.postcode >> m.sendername >> m.sendercity >> date >> m.recivername >> m.recivercity >> m.postpaid;
+
+        ifstream readfile2("file.txt");
+
+        while (!readfile2.eof()) {
+
+            readfile2 >> t.postcode >> t.sendername >> t.sendercity >> date2 >> t.recivername >> t.recivercity
+                      >> t.postpaid;
+            /* char recivercity1[size(m.recivercity)+1];
+             char recivercity2[size(t.recivercity)+1];
+             char sendercity1[size(m.sendercity)+1];
+             char sendercity2[size(t.sendercity)+1];
+
+ */
+
+
+            if ( (m.recivercity == t.recivercity) && (m.sendercity == t.sendercity) && (m.recivercity != m.sendercity)) {
+                if(!readfile2.eof());
+                count++;
+
+                citypair = true;
+
+            }
+
+        }
+
+        readfile2.close();
+        if(!readfile.eof());
+        if (citypair) {
+
+            cout << m.sendercity << setw(10) << m.recivercity << setw(10) << count << setw(10) << endl;
+
+        }
+
+
+    }
+    readfile.close();
+
+}
+
 
 int CheckInt(string line,string Voidname) {
 
