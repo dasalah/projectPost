@@ -2,10 +2,11 @@
 #include <iomanip>
 #include <fstream>
 #include<string>
+#include <cstring>
 
 using namespace std;
 bool checkpostcode(int postcode); //functions sign
-void darj();
+void AddShipment();
 void tahvil();
 void DayInfo();
 void PrintMonthlyIncome();
@@ -14,6 +15,59 @@ void maxsend();
 void maxreceive();
 void city();
 int CheckInt(string line,string Voidname);
+void menu();
+
+int main() {   //main
+
+    bool run =1;
+    string number;
+    int n;
+
+    while (run) {
+        menu();
+        cin>>number;
+        n = CheckInt(number,"number");
+        switch (n) {
+            case 1:
+                AddShipment();
+                break;
+            case 2:
+                tahvil();
+                break;
+            case 3:
+                DayInfo();
+                break;
+            case 4:
+                info();
+                break;
+            case 5:
+                maxsend();
+                break;
+            case 6:
+                maxreceive();
+                break;
+            case 7:
+                PrintMonthlyIncome();
+                break;
+            case 8:
+                city();
+                break;
+            default:
+                cout << "wrong number";
+        }
+        cout << "do you want to continue?(y/n)\n";
+        char ch;
+        cin >> ch;
+        if(ch =='y' || ch == 'Y'){
+            run =1;
+            menu();
+        }
+        else
+            run =0;
+    }
+}
+
+
 
 typedef struct { // made struct
     int postcode;
@@ -78,8 +132,8 @@ bool checkpostcode(int postcode){ //function for exist post code
     return false;
 }
 
-void darj() {  //entering a new shipment info
-    string code;
+void AddShipment() {  //entering a new shipment info
+    string input;
     marsole m;
     fstream file1("file.txt", ios::app);
     if (!file1) {
@@ -87,34 +141,37 @@ void darj() {  //entering a new shipment info
         exit(1);
     }
     cout << "enter your postcode:" << endl;
-    cin>>code;
-    m.postcode=CheckInt(code,"PostCode");
+    cin>>input;
+    m.postcode=CheckInt(input,"PostCode");
 
     if(checkpostcode(m.postcode)){
         cout<<"This code is already registered in the database."<<endl;
         return;
     }
     cout << "enter the price of your parcel:" << endl;
-    cin >> m.postpaid;
+    cin >> input;
+    m.postpaid=CheckInt(input, "price");
     cout << "enter sender's name:" << endl;
     cin >> m.sendername;
     cout << "enter reciver's name:" << endl;
     cin >> m.recivername;
-    cout << "enter sender's city:" << endl;
+    cout << "enter sender's city (on code city): " << endl;
     cin >> m.sendercity;
-    cout << "enter reciver's city:" << endl;
+    cout << "enter reciver's city (on code city):" << endl;
     cin >> m.recivercity;
     int ds, ms;
     Date s;
     cout << "enter sending day:" << endl;
-    cin >> ds;
+    cin >> input;
+    ds = CheckInt(input, "day");
     s.setday(ds);
     cout << "enter sending month: " << endl;
-    cin >> ms;
+    cin>>input;
+    ms=CheckInt(input, "month");
     s.setmonth(ms);
 
-    file1<< m.postcode <<" "<< m.sendername <<" "<< s.printdate() <<" "<< m.recivername <<" "<< m.recivercity <<" "<< m.postpaid << endl;
-    cout << "Data successfully recorded\n";
+    file1<< m.postcode <<" "<< m.sendername <<" "<<m.sendercity<<" "<< s.printdate() <<" "<< m.recivername <<" "<< m.recivercity <<" "<< m.postpaid << endl;
+    cout << "Data Successfully Recorded\n";
     file1.close();
 }
 
@@ -127,21 +184,28 @@ void tahvil() {
     }
     marsole recive;
     Date Recive;
+    string input;
     int dr, mr;
     cout <<"enter your postcode:"<< endl;
-    cin >> recive.postcode;
+    cin>>input;
+    recive.postcode=CheckInt(input,"postcode");
     while(!checkpostcode(recive.postcode)){
-        cout<<"Invalid postcode. Please enter a valid postcode:"<<endl;
+        cout<<"This code is not in the system database, Please enter a valid postcode on for exit enter 0."<<endl;
         cin>>recive.postcode;
-    }
+        if(recive.postcode==0){
+            return;
+        }
+                                          }
     cout<<"enter reciving day:"<<endl;
-    cin>>dr;
+    cin>>input;
+    dr=CheckInt(input,"day");
     Recive.setday(dr);
-    cout<< "enter reciving month:" <<endl;
-    cin>>mr;
+    cout<< "enter reciving month: " <<endl;
+    cin>>input;
+    mr = CheckInt(input,"month");
     Recive.setmonth(mr);
     file2<<recive.postcode<<" "<<Recive.printdate()<<endl;
-    cout << "Data successfully recorded." << endl;
+    cout << "Data Successfully Recorded." << endl;
     file2.close();
 }
 
@@ -150,6 +214,7 @@ void DayInfo() {
     marsole m;
     Date d;
     int day, month;
+    string input;
     bool CheckReceive=0,CheckTime=0;
     string line, lineCheck;
     string time, TimeCheck;
@@ -160,10 +225,12 @@ void DayInfo() {
         exit(1);
     }
     cout<<"enter intended day:"<< endl;
-    cin>>day;
+    cin>>input;
+    day = CheckInt(input,"day");
     d.setday(day);
     cout<<"enter intended month:"<<endl;
-    cin>>month;
+    cin>>input;
+    month = CheckInt(input,"month");
     d.setmonth(month);
     TimeCheck=d.printdate();
 
@@ -183,7 +250,6 @@ void DayInfo() {
                     CheckReceive=1;
 
                                                 }
-
             }
             if(!CheckReceive){
                 cout<<endl;
@@ -194,9 +260,7 @@ void DayInfo() {
 
     }
     if(!CheckTime){
-        system("color c");
-        cout<<"No shipments have been sent on your intended date\n";
-
+        cerr<<"No shipments have been sent on your intended date\n";
                   }
 
     file.close();
@@ -216,8 +280,8 @@ void PrintMonthlyIncome(){
     }
     marsole m;
     string date;
-
     int monthlyincome[13]={0};
+
     while(file1>>m.postcode>>m.sendername>>m.sendercity>>date>>m.recivername>>m.recivercity>>m.postpaid){
         int month = stoi(date.substr(0, 2));
         monthlyincome[month]+=m.postpaid;
@@ -230,18 +294,18 @@ void PrintMonthlyIncome(){
     }
 }
 
-
 //complite info with postcode
 void info() {
     marsole m;
     //Date d;
     int code;
-    string line, time, FullDate;
+    string line, time, FullDate,input;
     cout << "enter your post code:";
-    cin >> code;
+    cin>>input;
+    code = CheckInt(input,"post code");
     fstream file1("file.txt", ios::in);
     fstream file2("get.txt", ios::in);
-    if (!file1.is_open()) {
+    if (!(file1.is_open()&&file2.is_open())) {
         cerr << "somrthing went wrong during opening the file. please make sure that the file that you chose exists!" << endl;
         exit(1);
     }
@@ -266,7 +330,7 @@ void info() {
             }
         }
         else {
-            cout << "PostCode is NOT FOUND!";
+            cout << "PostCode is NOT FOUND!\n";
             break;
         }
     }
@@ -280,7 +344,7 @@ void maxsend() {
     marsole m, ma;
     string date, date2, maxsender;
     int maxcount = 1;
-    fstream file1("file.txt", ios::in);
+    fstream file1("file1.txt", ios::in);
     if (!file1) {
         cerr << "somthing went wrong during opening thr file please make sure the file the you chose exists!" << endl;
         exit(07);
@@ -311,7 +375,7 @@ void maxreceive() {
     marsole m, ma;
     string date, date2, maxreceiver;
     int maxcount = 1;
-    fstream file1("file1.txt", ios::in);
+    fstream file1("D:\\file.txt", ios::in);
     if (!file1) {
         cerr << "somthing went wrong during opening thr file please make sure the file the you chose exists!" << endl;
         exit(07);
@@ -438,52 +502,7 @@ int CheckInt(string line,string Voidname) {
                 << "6-max reciver                  \n"
                 << "7-Monthly income           \n"
                 << "8-Number of intercity shipments  \n\n"
-                << "Please enter your request number:\n";
+                <<"Please enter your request number:\n";
+
     }
 
-int main() {
-    bool run =1;
-    string number;
-    int n;
-    while (run) {
-                menu();
-                cin>>number;
-               n = CheckInt(number,"number");
-            switch (n) {
-                case 1:
-                    darj();
-                    break;
-                case 2:
-                    tahvil();
-                    break;
-                case 3:
-                    DayInfo();
-                    break;
-                case 4:
-                    info();
-                    break;
-                case 5:
-                    maxsend();
-                    break;
-                case 6:
-                    maxreceive();
-                    break;
-                case 7:
-                    PrintMonthlyIncome();
-                    break;
-                case 8:
-                    city();
-                    break;
-                default:
-                    cout << "wrong number";
-            }
-            cout << "do you want to continue?(y/n)\n";
-            char ch;
-            cin >> ch;
-        if(ch =='y' || ch == 'Y')run=1;
-
-        else{
-            exit(9);
-        }
-    }
-}
